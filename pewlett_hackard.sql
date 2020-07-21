@@ -10,7 +10,8 @@ DROP TABLE IF EXISTS salaries;
 DROP TABLE IF EXISTS titles;
 
 -- IMPORT DATA TABLE TYPES AND KEYS
--- USED LUCIDCHART
+-- BUT DON'T USE THEIR FK CODE - IT DOESN'T WORK
+-- ERD CHART AND IMPORT FROM LUCIDCHART
 
 -- DEPARTMENTS TABLE
 CREATE TABLE "departments" (
@@ -23,18 +24,17 @@ CREATE TABLE "departments" (
 CREATE TABLE "dept_manager" (
   	"dept_no" VARCHAR(5) NOT NULL,
   	"emp_no" INT NOT NULL
+	
 );
-
--- CREATE INDEX "FK" ON  "dept_manager" ("dept_no", "emp_no");
--- FOREIGN KEY (dept_no) references departments(dept_no), 
 
 -- DEPARTMENT EMPLOYEE TABLE
 CREATE TABLE "dept_emp" (
   	"emp_no" INT NOT NULL,
   	"dept_no" VARCHAR(5) NOT NULL
+	CONSTRAINT fk_dept_no
+      FOREIGN KEY(dept_no) 
+	  	REFERENCES departments(dept_no)	
 );
-
---CREATE INDEX "FK" ON  "dept_emp" ("emp_no", "dept_no");
 
 -- EMPLOYEES TABLE
 CREATE TABLE "employees" (
@@ -48,15 +48,11 @@ CREATE TABLE "employees" (
   	PRIMARY KEY ("emp_no")
 );
 
---CREATE INDEX "FK" ON  "employees" ("emp_title_id");
-
 -- SALARIES TABLE
 CREATE TABLE "salaries" (
   	"emp_no" INT NOT NULL,
   	"salary" INT NOT NULL
 );
-
--- CREATE INDEX "FK" ON  "salaries" ("emp_no");
 
 -- TITLES TABLE
 CREATE TABLE "titles" (
@@ -74,4 +70,40 @@ SELECT * FROM salaries;
 SELECT * FROM titles;
 
 -- ADD IN THE FOREIGN KEYS AS LUCIDCHART DIDN'T HAVE THE RIGHT SYNTAX
+-- https://www.postgresqltutorial.com/postgresql-foreign-key/
 
+-- ADD FOREIGN KEY DEPARTMENT MANAGER / DEPARTMENT EMPLOYEE NUMBER ****
+ALTER TABLE dept_manager
+ADD CONSTRAINT fk_dept_man_dept_no
+FOREIGN KEY(dept_no) 
+REFERENCES dept_emp(dept_no);
+
+-- ADD FOREIGN KEY DEPARTMENT MANAGER / EMPLOYEES NUMBER
+ALTER TABLE dept_manager
+ADD CONSTRAINT fk_dept_man_emp_no
+FOREIGN KEY(emp_no) 
+REFERENCES employees(emp_no);
+
+-- ADD FOREIGN KEY SALARIES / EMPLOYEES NUMBER
+ALTER TABLE salaries
+ADD CONSTRAINT fk_sal_emp_no
+FOREIGN KEY(emp_no) 
+REFERENCES employees(emp_no);
+
+-- ADD FOREIGN KEY DEPT EMPLOYEES / EMPLOYEES NUMBER
+ALTER TABLE dept_emp
+ADD CONSTRAINT fk_dept_emp_emp_no
+FOREIGN KEY(emp_no) 
+REFERENCES employees(emp_no);
+
+-- ADD FOREIGN KEY DEPT EMPLOYEES / DEPT MANAGER NUMBER ****
+ALTER TABLE dept_emp
+ADD CONSTRAINT fk_dept_emp_dept_man
+FOREIGN KEY(dept_no) 
+REFERENCES dept_manager(dept_no);
+
+-- ADD FOREIGN KEY EMPLOYEES TITLE / TITLES ***
+ALTER TABLE employees
+ADD CONSTRAINT fk_emp_title_titles
+FOREIGN KEY(emp_title_no) 
+REFERENCES titles(title_id);
