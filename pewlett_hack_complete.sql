@@ -104,6 +104,8 @@ ADD CONSTRAINT fk_emp_title_titles
 FOREIGN KEY(emp_title_id) 
 REFERENCES titles(title_id);
 
+-- IMPORT THE CSV FILES
+
 -- CHECK TABLES
 -- SELECT * FROM departments;
 -- SELECT * FROM dept_emp;
